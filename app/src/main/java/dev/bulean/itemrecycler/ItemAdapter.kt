@@ -1,6 +1,5 @@
 package dev.bulean.itemrecycler
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,22 +7,33 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dev.bulean.itemrecycler.model.DataItem
 
-class ItemAdapter(private val context: Context, private val dataset: List<DataItem>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>(){
-
-    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view){
-        val textView: TextView = view.findViewById(R.id.item_title)
-    }
+class ItemAdapter(private val dataset: List<DataItem>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(context)
-        val view = layoutInflater.inflate(R.layout.data_item, parent, false) as TextView
-        return ViewHolder(view)
+        return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemData = dataset[position]
-        holder.textView.text = context.resources.getString(itemData.item)
+        holder.bind(itemData)
     }
 
     override fun getItemCount(): Int = dataset.size
+
+    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
+        private val textView: TextView = itemView.findViewById(R.id.item_title)
+
+        fun bind(dataItem: DataItem){
+            val res = itemView.context.resources
+            textView.text = res.getString(dataItem.item)
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = layoutInflater.inflate(R.layout.data_item, parent, false)
+                return ViewHolder(view)
+            }
+        }
+    }
 }

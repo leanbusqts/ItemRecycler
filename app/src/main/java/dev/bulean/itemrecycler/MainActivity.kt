@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
         val dataset = Datasource().loadData()
         val recycler = findViewById<RecyclerView>(R.id.recycler)
-        recycler.adapter = ItemAdapter(this, dataset)
+        recycler.adapter = ItemAdapter(dataset)
         recycler.setHasFixedSize(true)
     }
 }
